@@ -80,7 +80,7 @@ input[type='range']::-moz-range-thumb {
 
 /* Canvas cursor */
 canvas {
-  cursor: crosshair;
+  cursor: default;
 }
 
 /* Cursor follower */
