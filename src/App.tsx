@@ -22,10 +22,12 @@ export default function App() {
   const canvas1Ref = useRef<HTMLCanvasElement>(null);
   const canvas2Ref = useRef<HTMLCanvasElement>(null);
   const resultCanvasRef = useRef<HTMLCanvasElement>(null);
+  const fullResultCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const view1Ref = useRef<HTMLDivElement>(null);
   const view2Ref = useRef<HTMLDivElement>(null);
   const resultViewRef = useRef<HTMLDivElement>(null);
   const inspectionRef = useRef<InspectionGridHandle>(null);
+  const viewportOffsetRef = useRef({ x: 0, y: 0 });
 
   // Comparison settings as local state (not needed in global store)
   const [comparisonMode, setComparisonMode] = useState('pixel');
@@ -41,24 +43,72 @@ export default function App() {
 
   const store = useAppStore;
 
+  // --- Result viewport rendering ---
+  const updateResultViewport = useCallback(() => {
+    const view1 = view1Ref.current;
+    const fullResult = fullResultCanvasRef.current;
+    const resultCanvas = resultCanvasRef.current;
+    if (!view1 || !fullResult || !resultCanvas || fullResult.width <= 1) return;
+
+    const zf = store.getState().zoomFactor;
+
+    // Visible region in original image pixels
+    const srcX = Math.floor(view1.scrollLeft / zf);
+    const srcY = Math.floor(view1.scrollTop / zf);
+    const srcW = Math.min(Math.ceil(view1.clientWidth / zf), fullResult.width - srcX);
+    const srcH = Math.min(Math.ceil(view1.clientHeight / zf), fullResult.height - srcY);
+
+    if (srcW <= 0 || srcH <= 0) return;
+
+    // Store offset for mouse position mapping
+    viewportOffsetRef.current = { x: srcX, y: srcY };
+
+    // Size result canvas to the visible region in image pixels
+    resultCanvas.width = srcW;
+    resultCanvas.height = srcH;
+
+    // CSS size = image pixels * zoom to visually match the image panels
+    resultCanvas.style.width = `${srcW * zf}px`;
+    resultCanvas.style.height = `${srcH * zf}px`;
+    // Clear any CSS transform from applyZoom
+    resultCanvas.style.transform = '';
+
+    // Draw only the visible sub-region from the offscreen canvas
+    const ctxResult = resultCanvas.getContext('2d');
+    if (!ctxResult) return;
+    ctxResult.drawImage(
+      fullResult,
+      srcX, srcY, srcW, srcH,
+      0, 0, srcW, srcH
+    );
+  }, [store]);
+
   // --- Comparison ---
   const doCompare = useCallback(() => {
     const { image1, image2, isComparing } = store.getState();
     if (!image1 || !image2 || isComparing) return;
-    if (!canvas1Ref.current || !canvas2Ref.current || !resultCanvasRef.current) return;
+    if (!canvas1Ref.current || !canvas2Ref.current) return;
+
+    // Create offscreen canvas lazily
+    if (!fullResultCanvasRef.current) {
+      fullResultCanvasRef.current = document.createElement('canvas');
+    }
 
     store.getState().updateState({ isComparing: true });
     const result = runComparison(
       canvas1Ref.current,
       canvas2Ref.current,
-      resultCanvasRef.current,
+      fullResultCanvasRef.current,
       comparisonMode,
       pixelSubMode,
       toleranceValue,
       transparencyValue
     );
     store.getState().updateState({ resultImage: result, isComparing: false });
-  }, [comparisonMode, pixelSubMode, toleranceValue, transparencyValue, store]);
+
+    // Render visible portion to on-screen result canvas
+    updateResultViewport();
+  }, [comparisonMode, pixelSubMode, toleranceValue, transparencyValue, store, updateResultViewport]);
 
   // --- Image loading ---
   const handleImageLoaded = useCallback(
@@ -81,14 +131,16 @@ export default function App() {
     [store, doCompare]
   );
 
-  // --- Zoom effect ---
+  // --- Zoom effect (exclude result canvas) ---
   const zoomFactor = useAppStore((s) => s.zoomFactor);
   useEffect(() => {
-    const canvases = [canvas1Ref.current, canvas2Ref.current, resultCanvasRef.current].filter(
+    const canvases = [canvas1Ref.current, canvas2Ref.current].filter(
       Boolean
     ) as HTMLCanvasElement[];
     applyZoom(canvases, zoomFactor);
-  }, [zoomFactor]);
+    // Result canvas uses CSS width/height for zoom, not transform
+    updateResultViewport();
+  }, [zoomFactor, updateResultViewport]);
 
   // --- Synchronized cursors & scroll ---
   useEffect(() => {
@@ -110,18 +162,46 @@ export default function App() {
     });
 
     function updateFollowers(canvasX: number, canvasY: number, activeIdx: number) {
-      const zf = store.getState().zoomFactor;
+      const fullW = fullResultCanvasRef.current?.width ?? 0;
+      const fullH = fullResultCanvasRef.current?.height ?? 0;
+
       canvases.forEach((canvas, idx) => {
         if (idx === activeIdx || !canvas || canvas.width <= 1) return;
         const f = followers[idx];
         const v = views[idx];
         if (!f || !v) return;
 
-        if (canvasX >= 0 && canvasX < canvas.width && canvasY >= 0 && canvasY < canvas.height) {
-          const viewRect = v.getBoundingClientRect();
+        // For result view, check bounds against full image size
+        const boundsW = idx === 2 ? fullW : canvas.width;
+        const boundsH = idx === 2 ? fullH : canvas.height;
+
+        if (canvasX >= 0 && canvasX < boundsW && canvasY >= 0 && canvasY < boundsH) {
           const canvasRect = canvas.getBoundingClientRect();
-          const xPos = canvasX * zf + v.scrollLeft + canvasRect.left - viewRect.left;
-          const yPos = canvasY * zf + v.scrollTop + canvasRect.top - viewRect.top;
+          const viewRect = v.getBoundingClientRect();
+          // Use actual display ratio (handles CSS max-width, transform, CSS sizing)
+          const displayScaleX = canvasRect.width / canvas.width;
+          const displayScaleY = canvasRect.height / canvas.height;
+          let xPos: number, yPos: number;
+
+          if (idx === 2) {
+            // Result view: canvas shows only the visible sub-region
+            const offset = viewportOffsetRef.current;
+            const localX = canvasX - offset.x;
+            const localY = canvasY - offset.y;
+
+            if (localX < 0 || localX >= canvas.width || localY < 0 || localY >= canvas.height) {
+              f.style.display = 'none';
+              return;
+            }
+
+            xPos = localX * displayScaleX + canvasRect.left - viewRect.left;
+            yPos = localY * displayScaleY + canvasRect.top - viewRect.top;
+          } else {
+            // Image views: use display ratio + scroll offset
+            xPos = canvasX * displayScaleX + v.scrollLeft + canvasRect.left - viewRect.left;
+            yPos = canvasY * displayScaleY + v.scrollTop + canvasRect.top - viewRect.top;
+          }
+
           f.className = 'cursor-follower inactive';
           f.style.left = `${xPos}px`;
           f.style.top = `${yPos}px`;
@@ -140,7 +220,14 @@ export default function App() {
 
       const moveHandler = (e: MouseEvent) => {
         const zf = store.getState().zoomFactor;
-        const pos = getCanvasPixelPosition(e, canvas, zf);
+        let pos = getCanvasPixelPosition(e, canvas, zf);
+
+        // If result canvas, map local coords back to full-image coords
+        if (idx === 2) {
+          const offset = viewportOffsetRef.current;
+          pos = { x: pos.x + offset.x, y: pos.y + offset.y };
+        }
+
         store.getState().updateState({
           cursorState: { canvasX: pos.x, canvasY: pos.y, zoomFactor: zf, activeViewIndex: idx },
         });
@@ -172,26 +259,35 @@ export default function App() {
       mouseLeaveHandlers[idx] = leaveHandler;
     });
 
-    // Scroll sync
+    // Scroll sync — only between image views, not result view
+    const imageViews = [view1Ref.current, view2Ref.current];
     const scrollHandlers: ((this: HTMLElement) => void)[] = [];
-    views.forEach((view, idx) => {
+    imageViews.forEach((view, idx) => {
       if (!view) return;
       const handler = function (this: HTMLElement) {
         if (scrollSyncRef.current) return;
         scrollSyncRef.current = true;
         const sl = this.scrollLeft;
         const st = this.scrollTop;
-        views.forEach((other, otherIdx) => {
+        imageViews.forEach((other, otherIdx) => {
           if (otherIdx !== idx && other) {
             other.scrollLeft = sl;
             other.scrollTop = st;
           }
         });
+        // Update result viewport on scroll
+        updateResultViewport();
         setTimeout(() => (scrollSyncRef.current = false), 10);
       };
       view.addEventListener('scroll', handler);
       scrollHandlers[idx] = handler;
     });
+
+    // ResizeObserver to update result when container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      updateResultViewport();
+    });
+    if (view1Ref.current) resizeObserver.observe(view1Ref.current);
 
     return () => {
       canvases.forEach((canvas, idx) => {
@@ -199,10 +295,11 @@ export default function App() {
         if (mouseMoveHandlers[idx]) canvas.removeEventListener('mousemove', mouseMoveHandlers[idx]);
         if (mouseLeaveHandlers[idx]) canvas.removeEventListener('mouseleave', mouseLeaveHandlers[idx]);
       });
-      views.forEach((view, idx) => {
+      imageViews.forEach((view, idx) => {
         if (!view || !scrollHandlers[idx]) return;
         view.removeEventListener('scroll', scrollHandlers[idx]);
       });
+      resizeObserver.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -214,10 +311,11 @@ export default function App() {
     const lp = lastPointRef.current;
     if (!lp) return;
 
-    const zf = state.zoomFactor;
     const rect = canvas.getBoundingClientRect();
-    const cx = (e.clientX - rect.left) / zf;
-    const cy = (e.clientY - rect.top) / zf;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const cx = (e.clientX - rect.left) * scaleX;
+    const cy = (e.clientY - rect.top) * scaleY;
     const ctx = state.activeContext;
 
     switch (state.selectedTool) {
@@ -280,10 +378,11 @@ export default function App() {
         if (!state.selectedTool || state.activeCanvas !== canvas || !state.activeContext) return;
 
         isDrawingRef.current = true;
-        const zf = state.zoomFactor;
         const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / zf;
-        const y = (e.clientY - rect.top) / zf;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
         lastPointRef.current = { x, y };
 
         switch (state.selectedTool) {
@@ -335,10 +434,11 @@ export default function App() {
           break;
         case 'selectTool':
           if (lp && e) {
-            const zf = state.zoomFactor;
             const rect = state.activeCanvas.getBoundingClientRect();
-            const endX = (e.clientX - rect.left) / zf;
-            const endY = (e.clientY - rect.top) / zf;
+            const scaleX = state.activeCanvas.width / rect.width;
+            const scaleY = state.activeCanvas.height / rect.height;
+            const endX = (e.clientX - rect.left) * scaleX;
+            const endY = (e.clientY - rect.top) * scaleY;
             finishOperation(OperationType.SELECTION, {
               selection: { startX: lp.x, startY: lp.y, width: endX - lp.x, height: endY - lp.y },
             });
@@ -444,11 +544,13 @@ export default function App() {
     });
   }, [store, doCompare]);
 
+  // Save full comparison result (from offscreen canvas, not viewport)
   const handleSaveResult = useCallback(() => {
-    if (!resultCanvasRef.current) return;
+    const canvas = fullResultCanvasRef.current;
+    if (!canvas) return;
     const link = document.createElement('a');
     link.download = 'comparison-result.png';
-    link.href = resultCanvasRef.current.toDataURL('image/png');
+    link.href = canvas.toDataURL('image/png');
     link.click();
   }, []);
 

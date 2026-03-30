@@ -30,12 +30,15 @@ export function renderImage(img: HTMLImageElement, canvas: HTMLCanvasElement): v
 export function getCanvasPixelPosition(
   event: MouseEvent,
   canvas: HTMLCanvasElement,
-  zoomFactor: number
+  _zoomFactor?: number
 ): Point {
   const rect = canvas.getBoundingClientRect();
+  // Use actual display ratio to handle CSS max-width, transform scale, and CSS width/height
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
   return {
-    x: Math.floor((event.clientX - rect.left) / zoomFactor),
-    y: Math.floor((event.clientY - rect.top) / zoomFactor),
+    x: Math.floor((event.clientX - rect.left) * scaleX),
+    y: Math.floor((event.clientY - rect.top) * scaleY),
   };
 }
 
