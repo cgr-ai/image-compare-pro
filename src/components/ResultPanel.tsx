@@ -25,7 +25,6 @@ export default function ResultPanel({
           <canvas ref={resultCanvasRef} />
         </div>
       </div>
-      <div className="bottom-spacer" />
     </div>
   );
 }
