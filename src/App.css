@@ -302,7 +302,7 @@ canvas.edit-active {
 .result-view {
   flex: 1;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
   position: relative;
   display: flex;
   justify-content: flex-start;
@@ -311,6 +311,7 @@ canvas.edit-active {
 }
 
 .result-view canvas {
+  transform-origin: left top;
   position: relative;
 }
 
@@ -833,7 +834,6 @@ canvas#resultCanvas {
   }
   .result-view {
     height: 300px;
-    overflow: hidden;
   }
 }
 
