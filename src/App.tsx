@@ -94,6 +94,20 @@ export default function App() {
     compareDebounceRef.current = setTimeout(() => doCompare(), 50);
   }, [comparisonMode, pixelSubMode, toleranceValue, transparencyValue, doCompare, store]);
 
+  // --- Ctrl+Wheel zoom ---
+  useEffect(() => {
+    const handler = (e: WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      const { zoomFactor } = store.getState();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      const newZoom = Math.min(5, Math.max(0.1, zoomFactor + delta));
+      store.getState().updateState({ zoomFactor: newZoom });
+    };
+    window.addEventListener('wheel', handler, { passive: false });
+    return () => window.removeEventListener('wheel', handler);
+  }, [store]);
+
   // --- Zoom effect ---
   const zoomFactor = useAppStore((s) => s.zoomFactor);
   useEffect(() => {
