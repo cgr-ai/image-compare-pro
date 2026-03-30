@@ -91,6 +91,7 @@ export default function Header({
               {comparisonMode === 'pixel' && pixelSubMode === 'tolerance' && (
                 <div className="control-group">
                   <label htmlFor="toleranceSlider">Tolerance</label>
+                  <button className="zoom-step-btn" onClick={() => handleToleranceChange(Math.max(0, toleranceValue - 1))}>-</button>
                   <input
                     type="range"
                     id="toleranceSlider"
@@ -99,6 +100,7 @@ export default function Header({
                     value={toleranceValue}
                     onChange={(e) => handleToleranceChange(parseInt(e.target.value))}
                   />
+                  <button className="zoom-step-btn" onClick={() => handleToleranceChange(Math.min(100, toleranceValue + 1))}>+</button>
                   <span className="range-value">{toleranceValue}</span>
                 </div>
               )}
