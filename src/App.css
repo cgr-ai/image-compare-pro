@@ -269,7 +269,6 @@ main {
 
 canvas {
   display: block;
-  max-width: 100%;
 }
 
 .images-row .image-panel:first-child .image-view canvas,
@@ -366,18 +365,7 @@ canvas.edit-active {
 .diff-info {
   font-size: var(--font-size-xs);
   font-family: 'Consolas', 'SF Mono', monospace;
-  display: flex;
-  gap: 4px;
   color: var(--color-text-secondary);
-}
-
-.diff-label {
-  white-space: nowrap;
-}
-
-.diff-values {
-  display: flex;
-  flex-direction: column;
 }
 
 /* -----------------------------

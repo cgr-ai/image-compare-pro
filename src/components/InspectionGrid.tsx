@@ -16,11 +16,8 @@ const InspectionGrid = forwardRef<InspectionGridHandle>((_props, ref) => {
   const inspectionCanvas2Ref = useRef<HTMLCanvasElement>(null);
   const cursorPosRef = useRef<HTMLSpanElement>(null);
   const pixel1RGBRef = useRef<HTMLSpanElement>(null);
-  const pixel1AlphaRef = useRef<HTMLSpanElement>(null);
   const pixel2RGBRef = useRef<HTMLSpanElement>(null);
-  const pixel2AlphaRef = useRef<HTMLSpanElement>(null);
   const pixelDiffRGBRef = useRef<HTMLSpanElement>(null);
-  const pixelDiffAlphaRef = useRef<HTMLSpanElement>(null);
 
   useImperativeHandle(ref, () => ({
     updateInspection(
@@ -29,7 +26,7 @@ const InspectionGrid = forwardRef<InspectionGridHandle>((_props, ref) => {
       img1Ctx: CanvasRenderingContext2D,
       img2Ctx: CanvasRenderingContext2D
     ) {
-      if (cursorPosRef.current) cursorPosRef.current.textContent = `X: ${x}, Y: ${y}`;
+      if (cursorPosRef.current) cursorPosRef.current.textContent = `${x}, ${y}`;
 
       const c1 = inspectionCanvas1Ref.current;
       const c2 = inspectionCanvas2Ref.current;
@@ -52,12 +49,9 @@ const InspectionGrid = forwardRef<InspectionGridHandle>((_props, ref) => {
         a: Math.abs(pixel1.a - pixel2.a),
       };
 
-      if (pixel1RGBRef.current) pixel1RGBRef.current.textContent = `${pixel1.r},${pixel1.g},${pixel1.b}`;
-      if (pixel1AlphaRef.current) pixel1AlphaRef.current.textContent = String(pixel1.a);
-      if (pixel2RGBRef.current) pixel2RGBRef.current.textContent = `${pixel2.r},${pixel2.g},${pixel2.b}`;
-      if (pixel2AlphaRef.current) pixel2AlphaRef.current.textContent = String(pixel2.a);
-      if (pixelDiffRGBRef.current) pixelDiffRGBRef.current.textContent = `${diff.r},${diff.g},${diff.b}`;
-      if (pixelDiffAlphaRef.current) pixelDiffAlphaRef.current.textContent = String(diff.a);
+      if (pixel1RGBRef.current) pixel1RGBRef.current.textContent = `${pixel1.r},${pixel1.g},${pixel1.b},${pixel1.a}`;
+      if (pixel2RGBRef.current) pixel2RGBRef.current.textContent = `${pixel2.r},${pixel2.g},${pixel2.b},${pixel2.a}`;
+      if (pixelDiffRGBRef.current) pixelDiffRGBRef.current.textContent = `${diff.r},${diff.g},${diff.b},${diff.a}`;
     },
   }));
 
@@ -66,31 +60,16 @@ const InspectionGrid = forwardRef<InspectionGridHandle>((_props, ref) => {
       <div className="inspection-grids">
         <div className="inspection-grid">
           <canvas ref={inspectionCanvas1Ref} width={156} height={156} />
-          <div className="pixel-data">
-            <div>RGB: <span ref={pixel1RGBRef}>0,0,0</span></div>
-            <div>A: <span ref={pixel1AlphaRef}>0</span></div>
-          </div>
+          <div className="pixel-data">RGBA: <span ref={pixel1RGBRef}>0,0,0,0</span></div>
         </div>
         <div className="inspection-grid">
           <canvas ref={inspectionCanvas2Ref} width={156} height={156} />
-          <div className="pixel-data">
-            <div>RGB: <span ref={pixel2RGBRef}>0,0,0</span></div>
-            <div>A: <span ref={pixel2AlphaRef}>0</span></div>
-          </div>
+          <div className="pixel-data">RGBA: <span ref={pixel2RGBRef}>0,0,0,0</span></div>
         </div>
       </div>
       <div className="info-container">
-        <div className="position-info">
-          <span>Position: </span>
-          <span ref={cursorPosRef}>X: 0, Y: 0</span>
-        </div>
-        <div className="diff-info">
-          <span className="diff-label">Diff:</span>
-          <div className="diff-values">
-            <div>RGB: <span ref={pixelDiffRGBRef}>0,0,0</span></div>
-            <div>A: <span ref={pixelDiffAlphaRef}>0</span></div>
-          </div>
-        </div>
+        <div className="position-info">Pos: <span ref={cursorPosRef}>0, 0</span></div>
+        <div className="diff-info">Diff: <span ref={pixelDiffRGBRef}>0,0,0,0</span></div>
       </div>
     </div>
   );
