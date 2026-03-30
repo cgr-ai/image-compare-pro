@@ -134,14 +134,17 @@ export default function Header({
 
           <div className="zoom-control">
             <label htmlFor="zoomSlider">Zoom</label>
+            <button className="zoom-step-btn" onClick={() => updateState({ zoomFactor: Math.max(0.1, zoomFactor - 0.1) })}>-</button>
             <input
               type="range"
               id="zoomSlider"
               min="10"
               max="500"
+              step="5"
               value={Math.round(zoomFactor * 100)}
               onChange={handleZoom}
             />
+            <button className="zoom-step-btn" onClick={() => updateState({ zoomFactor: Math.min(5, zoomFactor + 0.1) })}>+</button>
             <span className="range-value">{Math.round(zoomFactor * 100)}%</span>
           </div>
 
