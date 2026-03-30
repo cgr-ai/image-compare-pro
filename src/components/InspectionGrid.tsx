@@ -60,18 +60,22 @@ const InspectionGrid = forwardRef<InspectionGridHandle>((_props, ref) => {
   }));
 
   return (
-    <div className="inspection-container">
-      <div className="inspection-grid">
-        <div className="grid-label">Img 1 <span className="pixel-data" ref={pixel1RGBRef}>0,0,0,0</span></div>
-        <canvas ref={inspectionCanvas1Ref} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+    <div className="absolute left-0 top-0 bottom-0 z-2 w-[196px] bg-slate-800 border border-slate-700 rounded-md p-1 shadow-sm flex flex-col gap-[3px]">
+      <div className="flex flex-col gap-px">
+        <div className="flex justify-between items-center text-[0.7rem] font-mono text-sky-400 font-semibold px-0.5">
+          Img 1 <span className="text-slate-200 font-normal font-mono text-[0.7rem]" ref={pixel1RGBRef}>0,0,0,0</span>
+        </div>
+        <canvas ref={inspectionCanvas1Ref} width={CANVAS_SIZE} height={CANVAS_SIZE} className="block w-full h-auto border border-slate-700 bg-slate-900 [image-rendering:pixelated]" />
       </div>
-      <div className="inspection-grid">
-        <div className="grid-label">Img 2 <span className="pixel-data" ref={pixel2RGBRef}>0,0,0,0</span></div>
-        <canvas ref={inspectionCanvas2Ref} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+      <div className="flex flex-col gap-px">
+        <div className="flex justify-between items-center text-[0.7rem] font-mono text-sky-400 font-semibold px-0.5">
+          Img 2 <span className="text-slate-200 font-normal font-mono text-[0.7rem]" ref={pixel2RGBRef}>0,0,0,0</span>
+        </div>
+        <canvas ref={inspectionCanvas2Ref} width={CANVAS_SIZE} height={CANVAS_SIZE} className="block w-full h-auto border border-slate-700 bg-slate-900 [image-rendering:pixelated]" />
       </div>
-      <div className="info-container">
-        <span className="position-info" ref={cursorPosRef}>0, 0</span>
-        <span className="diff-info">Diff: <span ref={pixelDiffRGBRef}>0,0,0,0</span></span>
+      <div className="flex justify-between bg-slate-900 rounded px-1 py-[3px] text-[0.7rem] font-mono">
+        <span className="text-slate-200 whitespace-nowrap" ref={cursorPosRef}>0, 0</span>
+        <span className="text-slate-200 whitespace-nowrap">Diff: <span ref={pixelDiffRGBRef}>0,0,0,0</span></span>
       </div>
     </div>
   );
@@ -122,7 +126,6 @@ function drawZoomedGrid(
       ctx.strokeRect(originX + x * cellSize, originY + y * cellSize, cellSize, cellSize);
     }
   }
-  // Highlight center pixel (cursor position)
   const cx = originX + centerX * cellSize;
   const cy = originY + centerY * cellSize;
   ctx.strokeStyle = '#ff0000';

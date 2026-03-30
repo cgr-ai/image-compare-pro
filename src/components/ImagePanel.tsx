@@ -44,7 +44,6 @@ export default function ImagePanel({ imageNum, canvasRef, viewRef, onImageLoaded
         img.src = ev.target.result as string;
       };
       reader.readAsDataURL(file);
-      // Reset so same file can be re-selected
       e.target.value = '';
     },
     [canvasRef, imageNum, onImageLoaded]
@@ -55,16 +54,13 @@ export default function ImagePanel({ imageNum, canvasRef, viewRef, onImageLoaded
     const canvas = canvasRef.current;
 
     if (activeCanvas === canvas) {
-      // Deactivate
       canvas.style.boxShadow = 'none';
       updateState({ activeCanvas: null, activeContext: null });
     } else {
-      // Activate
       updateState({ activeCanvas: canvas, activeContext: getContext(canvas) });
     }
   }, [canvasRef, activeCanvas, updateState]);
 
-  // Handle drag and drop
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -103,12 +99,12 @@ export default function ImagePanel({ imageNum, canvasRef, viewRef, onImageLoaded
   );
 
   return (
-    <div className="image-panel">
-      <div className="panel-header">
-        <h3>Image {imageNum}</h3>
-        {isActive && <span className="edit-indicator">[Edit Mode]</span>}
-        <div className="button-group">
-          <button className="edit-btn" onClick={handleEdit}>
+    <div className="flex-1 min-w-0 border border-slate-700 rounded-md overflow-hidden bg-slate-800 shadow-sm flex flex-col">
+      <div className="panel-header flex justify-between items-center px-2 py-0.5 border-b border-slate-700 min-h-[30px] bg-gradient-to-b from-slate-800 to-slate-900/80 text-xs">
+        <h3 className="text-[0.8rem] font-semibold text-slate-400 uppercase tracking-wider m-0">Image {imageNum}</h3>
+        {isActive && <span className="ml-auto mr-2 text-green-500 font-semibold text-[0.7rem] uppercase tracking-wider">[Edit Mode]</span>}
+        <div className="flex gap-1 items-center">
+          <button className="bg-green-500 hover:bg-green-600 text-slate-50 text-[0.7rem] px-2 py-0.5 rounded border-none cursor-pointer" onClick={handleEdit}>
             Edit
           </button>
           <input
@@ -118,11 +114,11 @@ export default function ImagePanel({ imageNum, canvasRef, viewRef, onImageLoaded
             hidden
             onChange={handleFileChange}
           />
-          <button onClick={handleLoad}>Load</button>
+          <button className="bg-slate-700 hover:bg-slate-600 text-slate-50 text-[0.7rem] px-2 py-0.5 rounded border border-slate-600 cursor-pointer" onClick={handleLoad}>Load</button>
         </div>
       </div>
       <div
-        className="image-view"
+        className="image-view flex-1 min-h-0 overflow-auto relative flex items-start transition-colors duration-150 bg-slate-900 cursor-default"
         ref={viewRef}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -130,8 +126,9 @@ export default function ImagePanel({ imageNum, canvasRef, viewRef, onImageLoaded
       >
         <canvas
           ref={canvasRef}
+          className="block origin-top-left"
           style={{
-            boxShadow: isActive ? '0 0 0 3px #28a745' : 'none',
+            boxShadow: isActive ? '0 0 0 3px #22c55e' : 'none',
           }}
         />
       </div>

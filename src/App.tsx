@@ -30,7 +30,7 @@ export default function App() {
   // Comparison settings as local state (not needed in global store)
   const [comparisonMode, setComparisonMode] = useState('pixel');
   const [pixelSubMode, setPixelSubMode] = useState('tolerance');
-  const [toleranceValue, setToleranceValue] = useState(10);
+  const [toleranceValue, setToleranceValue] = useState(5);
   const [transparencyValue, setTransparencyValue] = useState(50);
   const [toolsVisible, setToolsVisible] = useState(false);
 
@@ -502,7 +502,7 @@ export default function App() {
   }, [activeCanvas]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div className="flex flex-col h-screen bg-slate-900 text-slate-200 font-sans text-[13px] overflow-hidden">
       <Header
         comparisonMode={comparisonMode}
         setComparisonMode={setComparisonMode}
@@ -516,10 +516,10 @@ export default function App() {
         onToggleTools={() => setToolsVisible(!toolsVisible)}
       />
 
-      <main>
-        <div className="main-layout">
-          <div className="left-content">
-            <div className="images-row">
+      <main className="flex-1 overflow-hidden flex flex-col p-2">
+        <div className="flex gap-2 flex-1 min-h-0 relative">
+          <div className="flex-1 flex flex-col gap-2 min-w-0 min-h-0">
+            <div className="images-row flex gap-2 w-full relative flex-1 min-h-0">
               <ImagePanel
                 imageNum={1}
                 canvasRef={canvas1Ref}

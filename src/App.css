@@ -1,77 +1,7 @@
 /*
- * IMAGE COMPARE PRO - Modernized Stylesheet
- * ==========================================
+ * IMAGE COMPARE PRO - Non-Tailwind rules
+ * Only rules that can't be expressed as Tailwind utilities
  */
-
-/* -----------------------------
- * 1. CSS Custom Properties
- * -----------------------------*/
-:root {
-  --color-primary: #1e2a32;
-  --color-primary-hover: #2d3e4a;
-  --color-secondary: #22c55e;
-  --color-secondary-hover: #16a34a;
-  --color-accent: #38bdf8;
-  --color-text-primary: #e2e8f0;
-  --color-text-secondary: #94a3b8;
-  --color-text-light: #f8fafc;
-  --color-text-muted: #64748b;
-  --color-bg-main: #0f172a;
-  --color-bg-panel: #1e293b;
-  --color-bg-header: #1e293b;
-  --color-bg-inspection: #1e293b;
-  --color-bg-pixel-data: #0f172a;
-  --color-border: #334155;
-  --color-border-light: #1e293b;
-  --color-border-accent: rgba(56, 189, 248, 0.2);
-  --shadow-standard: rgba(0, 0, 0, 0.3);
-  --shadow-active: rgba(34, 197, 94, 0.4);
-  --color-highlight-blue: #00ffff;
-  --color-highlight-red: #ff0000;
-  --color-canvas-placeholder: #1e293b;
-  --spacing-xxs: 0.15rem;
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 0.625rem;
-  --spacing-lg: 0.75rem;
-  --font-size-xs: 0.7rem;
-  --font-size-sm: 0.75rem;
-  --font-size-md: 0.8rem;
-  --font-size-lg: 0.85rem;
-  --font-size-xl: 1rem;
-  --font-size-xxl: 1.1rem;
-  --border-radius-sm: 4px;
-  --border-radius-md: 6px;
-  --border-radius-lg: 8px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --transition-fast: 0.15s ease;
-  --transition-standard: 0.25s ease;
-  --panel-height: 350px;
-}
-
-/* -----------------------------
- * 2. Base Styles & Reset
- * -----------------------------*/
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body, #root {
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  line-height: 1.4;
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-main);
-  font-size: 13px;
-}
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
@@ -79,726 +9,23 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-main);
+  background: #0f172a;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: #334155;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
+  background: #64748b;
 }
 
-/* -----------------------------
- * 3. Header Styles - Compact Toolbar
- * -----------------------------*/
-header {
-  background: var(--color-primary);
-  border-bottom: 1px solid var(--color-border);
-  padding: 0;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.header-bar {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding: 0 var(--spacing-sm);
-  height: 38px;
-}
-
-.app-title {
-  font-size: var(--font-size-md);
-  font-weight: 700;
-  color: var(--color-accent);
-  white-space: nowrap;
-  letter-spacing: 0.02em;
-  padding: 0 var(--spacing-sm);
-}
-
-.header-divider {
-  width: 1px;
-  height: 20px;
-  background: var(--color-border);
-  flex-shrink: 0;
-  margin: 0 var(--spacing-xs);
-}
-
-.tool-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-  align-items: center;
-  flex: 1;
-  padding: 0 var(--spacing-xs);
-  min-height: unset;
-}
-
-/* -----------------------------
- * 4. Main Layout Structure
- * -----------------------------*/
-main {
-  padding: var(--spacing-sm);
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-layout {
-  display: flex;
-  gap: var(--spacing-sm);
-  flex: 1;
-  min-height: 0;
-  position: relative;
-}
-
-.left-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  min-width: 0;
-  min-height: 0;
-}
-
-.images-row {
-  display: flex;
-  gap: var(--spacing-sm);
-  width: 100%;
-  position: relative;
-  flex: 1;
-  min-height: 0;
-}
-
-.bottom-row {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  position: relative;
-}
-
-.bottom-row .inspection-container {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 2;
-}
-
-.bottom-row .image-panel.result-panel {
-  width: calc(50% - var(--spacing-sm) / 2);
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* -----------------------------
- * 5. Image Panel Styles
- * -----------------------------*/
-.image-panel {
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  background-color: var(--color-bg-panel);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-}
-
-.panel-header {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 0.8) 100%);
-  padding: var(--spacing-xxs) var(--spacing-sm);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: var(--font-size-sm);
-  border-bottom: 1px solid var(--color-border);
-  min-height: 30px;
-}
-
-.panel-header h3 {
-  font-size: var(--font-size-md);
-  margin: 0;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.panel-header .button-group {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.panel-header .edit-btn {
-  background-color: var(--color-secondary);
-  font-size: var(--font-size-xs);
-  padding: 2px 8px;
-}
-
-.panel-header .edit-btn:hover {
-  background-color: var(--color-secondary-hover);
-}
-
-.panel-header .edit-indicator {
-  margin-left: auto;
-  margin-right: 8px;
-  color: var(--color-secondary);
-  font-weight: 600;
-  font-size: var(--font-size-xs);
-  display: inline-block;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.image-view {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  transition: background-color var(--transition-fast);
-  background: var(--color-bg-main);
-}
-
-.images-row .image-panel:first-child .image-view,
-.images-row .image-panel:last-child .image-view {
-  justify-content: flex-start;
-}
-
-.images-row .image-panel {
-  flex: 1;
-  min-width: 0;
-}
-
-canvas {
-  display: block;
-}
-
-.images-row .image-panel:first-child .image-view canvas,
-.images-row .image-panel:last-child .image-view canvas {
-  transform-origin: left top !important;
-}
-
-canvas.edit-active {
-  box-shadow: 0 0 0 2px var(--color-secondary);
-}
-
-/* -----------------------------
- * 6. Result Panel & Inspection
- * -----------------------------*/
-.inspection-container {
-  background-color: var(--color-bg-inspection);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-xs);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  width: 196px;
-}
-
-.result-view {
-  flex: 1;
-  height: 100%;
-  overflow: auto;
-  position: relative;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  background: var(--color-bg-main);
-}
-
-.result-view canvas {
-  transform-origin: left top;
-  position: relative;
-}
-
-.inspection-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.inspection-grid canvas {
-  display: block;
-  border: 1px solid var(--color-border);
-  background-color: var(--color-bg-main);
-  width: 100%;
-  height: auto;
-  image-rendering: pixelated;
-}
-
-.grid-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: var(--font-size-xs);
-  font-family: 'Consolas', 'SF Mono', monospace;
-  color: var(--color-accent);
-  font-weight: 600;
-  padding: 1px 2px;
-}
-
-.pixel-data {
-  font-size: var(--font-size-xs);
-  font-family: 'Consolas', 'SF Mono', monospace;
-  color: var(--color-text-primary);
-  font-weight: 400;
-}
-
-.info-container {
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--color-bg-pixel-data);
-  border-radius: var(--border-radius-sm);
-  padding: 3px 4px;
-  font-size: var(--font-size-xs);
-  font-family: 'Consolas', 'SF Mono', monospace;
-}
-
-.position-info {
-  color: var(--color-text-primary);
-  white-space: nowrap;
-}
-
-.diff-info {
-  color: var(--color-text-primary);
-  white-space: nowrap;
-}
-
-/* -----------------------------
- * 7. Editing Tools Panel - Collapsible
- * -----------------------------*/
-.editing-tools {
-  width: 180px;
-  flex-shrink: 0;
-  background-color: var(--color-bg-panel);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  transition: width var(--transition-standard);
-  box-shadow: var(--shadow-sm);
-}
-
-.tools-expand-btn {
-  background: none;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  padding: 2px 8px;
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-xs);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  white-space: nowrap;
-}
-
-.tools-expand-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--color-text-light);
-  border-color: var(--color-accent);
-}
-
-.editing-tools-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 0.8) 100%);
-  border-bottom: 1px solid var(--color-border);
-  cursor: pointer;
-  user-select: none;
-  min-height: 30px;
-}
-
-.editing-tools-header:hover {
-  background: linear-gradient(180deg, rgba(45, 62, 74, 1) 0%, rgba(20, 30, 50, 0.8) 100%);
-}
-
-.editing-tools-title {
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-
-.collapse-toggle {
-  background: none;
-  border: none;
-  color: var(--color-text-muted);
-  font-size: 12px;
-  padding: 0;
-  line-height: 1;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.collapse-toggle:hover {
-  color: var(--color-accent);
-  background: none;
-}
-
-.editing-tools-body {
-  padding: var(--spacing-sm);
-  overflow: hidden;
-  transition: opacity var(--transition-fast);
-}
-
-
-.tool-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px;
-}
-
-.tool-btn {
-  text-align: center;
-  padding: var(--spacing-xs);
-  font-size: var(--font-size-xs);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  border-radius: var(--border-radius-sm);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid transparent;
-  transition: all var(--transition-fast);
-}
-
-.tool-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--color-border);
-}
-
-.tool-btn.active {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: var(--color-secondary);
-  color: var(--color-secondary);
-  font-weight: 600;
-}
-
-.tool-icon {
-  font-size: 14px;
-  line-height: 1;
-}
-
-.tool-label {
-  font-size: var(--font-size-xs);
-}
-
-.tool-options {
-  margin-top: var(--spacing-sm);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.option-row {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
-.option-row label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  min-width: 32px;
-}
-
-.edit-actions {
-  margin-top: var(--spacing-sm);
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--spacing-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.action-row {
-  display: flex;
-  gap: 3px;
-}
-
-.action-row button {
-  flex: 1;
-}
-
-#resetBtn {
-  background-color: #dc2626;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#resetBtn:hover {
-  background-color: #b91c1c;
-}
-
-#saveBtn {
-  background-color: #2563eb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#saveBtn:hover {
-  background-color: #1d4ed8;
-}
-
-#applyBtn {
-  background-color: var(--color-secondary);
-  font-weight: 600;
-}
-
-#applyBtn:hover {
-  background-color: var(--color-secondary-hover);
-}
-
-/* -----------------------------
- * 8. Comparison Controls
- * -----------------------------*/
-.comparison-controls {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.main-controls {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
-}
-
-.control-group {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: var(--font-size-sm);
-}
-
-.control-group label {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 500;
-}
-
-.range-value {
-  font-size: var(--font-size-xs);
-  color: var(--color-accent);
-  font-family: 'Consolas', 'SF Mono', monospace;
-  min-width: 28px;
-  text-align: right;
-}
-
-.zoom-control {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  font-size: var(--font-size-sm);
-  gap: 4px;
-}
-
-.zoom-control input[type='range'] {
-  width: 120px;
-}
-
-.zoom-step-btn {
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  font-size: 13px;
-  font-weight: bold;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-}
-
-.zoom-step-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-/* Help button */
-.help-btn {
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  margin-left: 4px;
-  flex-shrink: 0;
-}
-
-.help-btn:hover {
-  background: rgba(56, 189, 248, 0.15);
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-/* Help modal */
-.help-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(3px);
-}
-
-.help-modal {
-  background: var(--color-bg-panel);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-lg);
-  width: 580px;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-.help-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.help-header h2 {
-  font-size: var(--font-size-xl);
-  color: var(--color-accent);
-  margin: 0;
-}
-
-.help-close {
-  background: none;
-  border: none;
-  color: var(--color-text-muted);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0 4px;
-  line-height: 1;
-}
-
-.help-close:hover {
-  color: var(--color-text-primary);
-  background: none;
-}
-
-.help-body {
-  padding: 12px 16px;
-}
-
-.help-body section {
-  margin-bottom: 16px;
-}
-
-.help-body section:last-child {
-  margin-bottom: 0;
-}
-
-.help-body h3 {
-  font-size: var(--font-size-lg);
-  color: var(--color-accent);
-  margin-bottom: 4px;
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 3px;
-}
-
-.help-body h4 {
-  font-size: var(--font-size-md);
-  color: var(--color-text-primary);
-  margin: 8px 0 2px;
-}
-
-.help-body p {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin: 2px 0 4px;
-  line-height: 1.5;
-}
-
-.help-body ul {
-  list-style: none;
-  padding-left: 8px;
-  margin: 4px 0;
-}
-
-.help-body li {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  line-height: 1.8;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.help-body code {
-  font-family: 'Consolas', 'SF Mono', monospace;
-  background: var(--color-bg-main);
-  padding: 1px 4px;
-  border-radius: 3px;
-  font-size: var(--font-size-xs);
-  color: var(--color-accent);
-}
-
-.color-swatch {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
-}
-
-.zoom-control label {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 500;
-}
-
-/* -----------------------------
- * 9. Form Controls
- * -----------------------------*/
+/* Range input styling */
 input[type='range'] {
   width: 70px;
   height: 3px;
   -webkit-appearance: none;
   appearance: none;
-  background: var(--color-border);
+  background: #334155;
   border-radius: 2px;
   outline: none;
   border: none;
@@ -810,9 +37,9 @@ input[type='range']::-webkit-slider-thumb {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: #38bdf8;
   cursor: pointer;
-  border: 2px solid var(--color-bg-main);
+  border: 2px solid #0f172a;
   box-shadow: 0 0 4px rgba(56, 189, 248, 0.3);
 }
 
@@ -820,87 +47,43 @@ input[type='range']::-moz-range-thumb {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: #38bdf8;
   cursor: pointer;
-  border: 2px solid var(--color-bg-main);
+  border: 2px solid #0f172a;
   box-shadow: 0 0 4px rgba(56, 189, 248, 0.3);
 }
 
-select {
-  padding: 2px 6px;
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-main);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
+/* Step buttons (zoom +/-, tolerance +/-, help) */
+.step-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid #334155;
+  color: #94a3b8;
   cursor: pointer;
-  outline: none;
-  transition: border-color var(--transition-fast);
+  flex-shrink: 0;
 }
 
-select:hover,
-select:focus {
-  border-color: var(--color-accent);
+.step-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #38bdf8;
+  border-color: #38bdf8;
 }
 
-input[type='color'] {
-  height: 24px;
-  width: 100%;
-  padding: 1px;
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-main);
-  cursor: pointer;
-}
-
-button {
-  padding: 3px 8px;
-  cursor: pointer;
-  background-color: var(--color-primary-hover);
-  color: var(--color-text-light);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-xs);
-  transition: all var(--transition-fast);
-  white-space: nowrap;
-}
-
-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: var(--color-text-muted);
-}
-
-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* -----------------------------
- * 10. Footer
- * -----------------------------*/
-footer {
-  background: var(--color-primary);
-  color: var(--color-text-muted);
-  text-align: center;
-  padding: var(--spacing-xxs) var(--spacing-xs);
-  font-size: var(--font-size-xs);
-  border-top: 1px solid var(--color-border);
-}
-
-/* -----------------------------
- * 11. Cursor
- * -----------------------------*/
-canvas#image1Canvas,
-canvas#image2Canvas,
-canvas#resultCanvas {
+/* Canvas cursor */
+canvas {
   cursor: crosshair;
 }
 
-.image-view,
-.result-view {
-  cursor: default;
-}
-
+/* Cursor follower */
 .cursor-follower {
   position: absolute;
   pointer-events: none;
@@ -911,7 +94,6 @@ canvas#resultCanvas {
 .cursor-follower.inactive {
   width: 15px;
   height: 15px;
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.5);
 }
 
 .cursor-follower.inactive::before,
@@ -919,7 +101,6 @@ canvas#resultCanvas {
   content: '';
   position: absolute;
   background-color: rgba(255, 255, 255, 0.95);
-  width: 1px;
 }
 
 .cursor-follower.inactive::before {
@@ -936,17 +117,7 @@ canvas#resultCanvas {
   left: 50%;
 }
 
-.highlight-box {
-  position: absolute;
-  border: 2px solid var(--color-highlight-red);
-  box-sizing: border-box;
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* -----------------------------
- * 12. Drag & Drop
- * -----------------------------*/
+/* Drag & drop overlays */
 .image-view::before {
   content: 'Drop image here';
   display: flex;
@@ -956,17 +127,17 @@ canvas#resultCanvas {
   width: 100%;
   height: 100%;
   background-color: rgba(15, 23, 42, 0.85);
-  color: var(--color-accent);
-  font-size: var(--font-size-xl);
+  color: #38bdf8;
+  font-size: 1rem;
   font-weight: 600;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity var(--transition-fast);
+  transition: opacity 0.15s ease;
   pointer-events: none;
   z-index: 10;
-  border: 2px dashed var(--color-accent);
-  border-radius: var(--border-radius-md);
+  border: 2px dashed #38bdf8;
+  border-radius: 6px;
 }
 
 .image-view.drag-highlight::before {
@@ -982,68 +153,38 @@ canvas#resultCanvas {
   width: 100%;
   height: 100%;
   background-color: rgba(34, 197, 94, 0.15);
-  color: var(--color-secondary);
-  font-size: var(--font-size-xl);
+  color: #22c55e;
+  font-size: 1rem;
   font-weight: 600;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity var(--transition-fast);
+  transition: opacity 0.15s ease;
   pointer-events: none;
   z-index: 11;
-  border: 2px dashed var(--color-secondary);
-  border-radius: var(--border-radius-md);
+  border: 2px dashed #22c55e;
+  border-radius: 6px;
 }
 
 .images-row.drag-highlight::before {
   opacity: 1;
 }
 
-/* -----------------------------
- * 13. Responsive
- * -----------------------------*/
-@media (max-width: 1200px) {
-  .bottom-row .inspection-container {
-    position: static;
-  }
-  .bottom-row .image-panel.result-panel {
-    width: auto;
-    flex: 1;
-  }
-  .result-view {
-    height: 300px;
-  }
+/* Highlight box for selections */
+.highlight-box {
+  position: absolute;
+  border: 2px solid #ff0000;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 5;
 }
 
-@media (max-width: 1100px) {
-  .main-layout {
-    flex-direction: column;
-  }
-  .editing-tools {
-    width: 100% !important;
-  }
-  .tool-buttons {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .edit-actions {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .edit-actions button {
-    flex: 1;
-    min-width: fit-content;
-  }
+/* Header background (custom color not in Tailwind palette) */
+.bg-primary {
+  background-color: #1e2a32;
 }
 
-@media (max-width: 768px) {
-  .images-row,
-  .bottom-row {
-    flex-direction: column;
-  }
-  .header-bar {
-    height: auto;
-    flex-wrap: wrap;
-    padding: var(--spacing-xs);
-    gap: var(--spacing-xs);
-  }
+/* Panel header gradient */
+.panel-header {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 0.8) 100%);
 }

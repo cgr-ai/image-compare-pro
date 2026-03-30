@@ -16,69 +16,69 @@ interface HeaderProps {
 
 function HelpModal({ onClose }: { onClose: () => void }) {
   return (
-    <div className="help-overlay" onClick={onClose}>
-      <div className="help-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="help-header">
-          <h2>Image Compare Pro - Help</h2>
-          <button className="help-close" onClick={onClose}>&times;</button>
+    <div className="fixed inset-0 bg-black/60 z-[1000] flex items-center justify-center backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-slate-800 border border-slate-700 rounded-lg w-[580px] max-h-[80vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-between items-center px-4 py-3 border-b border-slate-700">
+          <h2 className="text-base text-sky-400 m-0">Image Compare Pro - Help</h2>
+          <button className="bg-transparent border-none text-slate-500 text-xl cursor-pointer px-1 leading-none hover:text-slate-200 hover:bg-transparent" onClick={onClose}>&times;</button>
         </div>
-        <div className="help-body">
-          <section>
-            <h3>Pixel Diff</h3>
-            <p>Per-pixel comparison between the two images.</p>
-            <h4>Threshold</h4>
-            <p>Compares the max channel difference (R, G, B) of each pixel against a tolerance value.</p>
-            <ul>
-              <li><span className="color-swatch" style={{background:'rgb(128,128,128)'}} /> <strong>Gray</strong> — Pixels are identical (diff = 0)</li>
-              <li><span className="color-swatch" style={{background:'rgb(0,0,200)'}} /> <strong>Blue</strong> — Difference is within tolerance</li>
-              <li><span className="color-swatch" style={{background:'rgb(220,0,0)'}} /> <strong>Red</strong> — Difference exceeds tolerance</li>
+        <div className="px-4 py-3 text-sm">
+          <section className="mb-4">
+            <h3 className="text-[0.85rem] text-sky-400 mb-1 border-b border-slate-700 pb-1">Pixel Diff</h3>
+            <p className="text-slate-400 mb-1 leading-relaxed">Per-pixel comparison between the two images.</p>
+            <h4 className="text-[0.8rem] text-slate-200 mt-2 mb-0.5">Threshold</h4>
+            <p className="text-slate-400 mb-1 leading-relaxed">Compares the max channel difference (R, G, B) of each pixel against a tolerance value.</p>
+            <ul className="list-none pl-2 my-1 space-y-1">
+              <li className="text-slate-400 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0" style={{background:'rgb(128,128,128)'}} /> <strong className="text-slate-200">Gray</strong> — Pixels are identical (diff = 0)</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0" style={{background:'rgb(0,0,200)'}} /> <strong className="text-slate-200">Blue</strong> — Difference is within tolerance</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0" style={{background:'rgb(220,0,0)'}} /> <strong className="text-slate-200">Red</strong> — Difference exceeds tolerance</li>
             </ul>
-            <p>Use the <strong>Tolerance</strong> slider to adjust sensitivity. At 0, any difference shows red.</p>
+            <p className="text-slate-400 mb-1 leading-relaxed">Use the <strong className="text-slate-200">Tolerance</strong> slider to adjust sensitivity. At 0, any difference shows red.</p>
 
-            <h4>Heatmap</h4>
-            <p>Visualizes difference magnitude as a heat map.</p>
-            <ul>
-              <li><strong>Black</strong> — Identical pixels</li>
-              <li><strong>Yellow</strong> (brighter = larger diff) — Pixels that differ</li>
+            <h4 className="text-[0.8rem] text-slate-200 mt-2 mb-0.5">Heatmap</h4>
+            <p className="text-slate-400 mb-1 leading-relaxed">Visualizes difference magnitude as a heat map.</p>
+            <ul className="list-none pl-2 my-1 space-y-1">
+              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Black</strong> — Identical pixels</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Yellow</strong> (brighter = larger diff) — Pixels that differ</li>
             </ul>
 
-            <h4>Overlay</h4>
-            <p>Weighted blend of both images. Use the <strong>Opacity</strong> slider to control the mix ratio.</p>
+            <h4 className="text-[0.8rem] text-slate-200 mt-2 mb-0.5">Overlay</h4>
+            <p className="text-slate-400 mb-1 leading-relaxed">Weighted blend of both images. Use the <strong className="text-slate-200">Opacity</strong> slider to control the mix ratio.</p>
+          </section>
+
+          <section className="mb-4">
+            <h3 className="text-[0.85rem] text-sky-400 mb-1 border-b border-slate-700 pb-1">Edge Diff</h3>
+            <p className="text-slate-400 mb-1 leading-relaxed">Structural edge comparison using Laplacian edge detection.</p>
+            <ul className="list-none pl-2 my-1 space-y-1">
+              <li className="text-slate-400 flex items-center gap-1.5">Applies a 3x3 Laplacian kernel <code className="font-mono bg-slate-900 px-1 rounded text-[0.7rem] text-sky-400">[-1,-1,-1, -1,8,-1, -1,-1,-1]</code> to both images</li>
+              <li className="text-slate-400 flex items-center gap-1.5">Converts pixels to grayscale, convolves with kernel</li>
+              <li className="text-slate-400 flex items-center gap-1.5">Thresholds at |edge| &gt; 100 to classify edge vs non-edge</li>
+            </ul>
+            <p className="text-slate-400 mb-1 leading-relaxed">Output:</p>
+            <ul className="list-none pl-2 my-1 space-y-1">
+              <li className="text-slate-400 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0" style={{background:'rgb(255,255,0)'}} /> <strong className="text-slate-200">Yellow</strong> — Edge structure differs between images</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Grayscale</strong> — Edge structure matches (shows original luminance)</li>
+            </ul>
+            <p className="text-slate-400 mb-1 leading-relaxed">Catches structural changes (moved edges, shape changes) but ignores subtle color/brightness shifts.</p>
+          </section>
+
+          <section className="mb-4">
+            <h3 className="text-[0.85rem] text-sky-400 mb-1 border-b border-slate-700 pb-1">Color Dist.</h3>
+            <p className="text-slate-400 mb-1 leading-relaxed">Global color distribution comparison using Bhattacharyya distance.</p>
+            <ul className="list-none pl-2 my-1 space-y-1">
+              <li className="text-slate-400 flex items-center gap-1.5">Builds an 8-bin RGB histogram per image (8 bins x 3 channels = 24 values)</li>
+              <li className="text-slate-400 flex items-center gap-1.5">Normalizes by pixel count</li>
+              <li className="text-slate-400 flex items-center gap-1.5">Computes distance: <code className="font-mono bg-slate-900 px-1 rounded text-[0.7rem] text-sky-400">1 - &Sigma;&radic;(h1[i] x h2[i])</code></li>
+            </ul>
+            <p className="text-slate-400 mb-1 leading-relaxed">Output: Image 1 with a uniform blue tint proportional to the histogram distance. More blue = more different overall color distribution.</p>
           </section>
 
           <section>
-            <h3>Edge Diff</h3>
-            <p>Structural edge comparison using Laplacian edge detection.</p>
-            <ul>
-              <li>Applies a 3x3 Laplacian kernel <code>[-1,-1,-1, -1,8,-1, -1,-1,-1]</code> to both images</li>
-              <li>Converts pixels to grayscale, convolves with kernel</li>
-              <li>Thresholds at |edge| &gt; 100 to classify edge vs non-edge</li>
-            </ul>
-            <p>Output:</p>
-            <ul>
-              <li><span className="color-swatch" style={{background:'rgb(255,255,0)'}} /> <strong>Yellow</strong> — Edge structure differs between images</li>
-              <li><strong>Grayscale</strong> — Edge structure matches (shows original luminance)</li>
-            </ul>
-            <p>Catches structural changes (moved edges, shape changes) but ignores subtle color/brightness shifts.</p>
-          </section>
-
-          <section>
-            <h3>Color Dist.</h3>
-            <p>Global color distribution comparison using Bhattacharyya distance.</p>
-            <ul>
-              <li>Builds an 8-bin RGB histogram per image (8 bins x 3 channels = 24 values)</li>
-              <li>Normalizes by pixel count</li>
-              <li>Computes distance: <code>1 - &Sigma;&radic;(h1[i] x h2[i])</code></li>
-            </ul>
-            <p>Output: Image 1 with a uniform blue tint proportional to the histogram distance. More blue = more different overall color distribution.</p>
-          </section>
-
-          <section>
-            <h3>Controls</h3>
-            <ul>
-              <li><strong>Zoom</strong> — Scale all panels (10%-500%). Use +/- for 10% steps.</li>
-              <li><strong>Tools</strong> — Toggle the editing panel (Brush, Eraser, Clone, Select).</li>
-              <li><strong>Inspection Grid</strong> — Shows a zoomed 13x13 pixel window around the cursor with RGBA values and per-pixel diff.</li>
+            <h3 className="text-[0.85rem] text-sky-400 mb-1 border-b border-slate-700 pb-1">Controls</h3>
+            <ul className="list-none pl-2 my-1 space-y-1">
+              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Zoom</strong> — Scale all panels (10%-500%). Use +/- for 10% steps. Ctrl+Wheel also works.</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Tools</strong> — Toggle the editing panel (Brush, Eraser, Clone, Select).</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Inspection Grid</strong> — Shows a zoomed 13x13 pixel window around the cursor with RGBA values and per-pixel diff.</li>
             </ul>
           </section>
         </div>
@@ -111,37 +111,21 @@ export default function Header({
     [updateState]
   );
 
-  const handleModeChange = (mode: string) => {
-    setComparisonMode(mode);
-  };
-
-  const handleSubModeChange = (mode: string) => {
-    setPixelSubMode(mode);
-  };
-
-  const handleToleranceChange = (val: number) => {
-    setToleranceValue(val);
-  };
-
-  const handleTransparencyChange = (val: number) => {
-    setTransparencyValue(val);
-  };
-
   return (
     <>
-      <header>
-        <div className="header-bar">
-          <span className="app-title">Image Compare Pro</span>
-          <div className="header-divider" />
-          <div className="tool-controls">
-            <div className="comparison-controls">
-              <div className="main-controls">
-                <div className="control-group">
-                  <label htmlFor="comparisonMode">Mode</label>
+      <header className="bg-primary sticky top-0 z-50 border-b border-slate-700">
+        <div className="flex items-center h-[38px] px-2">
+          <span className="text-[0.8rem] font-bold text-sky-400 whitespace-nowrap tracking-wide px-2">Image Compare Pro</span>
+          <div className="w-px h-5 bg-slate-700 shrink-0 mx-1" />
+          <div className="flex flex-wrap gap-2 items-center flex-1 px-1">
+            <div className="flex items-center flex-wrap">
+              <div className="flex items-center flex-wrap gap-2">
+                <div className="flex items-center gap-1 text-xs">
+                  <label className="text-slate-400 text-[0.7rem] uppercase tracking-wide font-medium">Mode</label>
                   <select
-                    id="comparisonMode"
                     value={comparisonMode}
-                    onChange={(e) => handleModeChange(e.target.value)}
+                    onChange={(e) => setComparisonMode(e.target.value)}
+                    className="px-1.5 py-0.5 rounded border border-slate-700 bg-slate-900 text-slate-200 text-xs cursor-pointer outline-none hover:border-sky-400 focus:border-sky-400 transition-colors duration-150"
                   >
                     <option value="pixel">Pixel Diff</option>
                     <option value="structural">Edge Diff</option>
@@ -150,12 +134,12 @@ export default function Header({
                 </div>
 
                 {comparisonMode === 'pixel' && (
-                  <div className="control-group">
-                    <label htmlFor="pixelSubMode">Method</label>
+                  <div className="flex items-center gap-1 text-xs">
+                    <label className="text-slate-400 text-[0.7rem] uppercase tracking-wide font-medium">Method</label>
                     <select
-                      id="pixelSubMode"
                       value={pixelSubMode}
-                      onChange={(e) => handleSubModeChange(e.target.value)}
+                      onChange={(e) => setPixelSubMode(e.target.value)}
+                      className="px-1.5 py-0.5 rounded border border-slate-700 bg-slate-900 text-slate-200 text-xs cursor-pointer outline-none hover:border-sky-400 focus:border-sky-400 transition-colors duration-150"
                     >
                       <option value="tolerance">Threshold</option>
                       <option value="range">Heatmap</option>
@@ -165,64 +149,69 @@ export default function Header({
                 )}
 
                 {comparisonMode === 'pixel' && pixelSubMode === 'tolerance' && (
-                  <div className="control-group">
-                    <label htmlFor="toleranceSlider">Tolerance</label>
-                    <button className="zoom-step-btn" onClick={() => handleToleranceChange(Math.max(0, toleranceValue - 1))}>-</button>
+                  <div className="flex items-center gap-1 text-xs">
+                    <label className="text-slate-400 text-[0.7rem] uppercase tracking-wide font-medium">Tolerance</label>
+                    <button className="step-btn" onClick={() => setToleranceValue(Math.max(0, toleranceValue - 1))}>-</button>
                     <input
                       type="range"
-                      id="toleranceSlider"
                       min="0"
                       max="100"
                       value={toleranceValue}
-                      onChange={(e) => handleToleranceChange(parseInt(e.target.value))}
+                      onChange={(e) => setToleranceValue(parseInt(e.target.value))}
                     />
-                    <button className="zoom-step-btn" onClick={() => handleToleranceChange(Math.min(100, toleranceValue + 1))}>+</button>
-                    <span className="range-value">{toleranceValue}</span>
+                    <button className="step-btn" onClick={() => setToleranceValue(Math.min(100, toleranceValue + 1))}>+</button>
+                    <span className="text-[0.7rem] text-sky-400 font-mono min-w-[28px] text-right">{toleranceValue}</span>
                   </div>
                 )}
 
                 {comparisonMode === 'pixel' && pixelSubMode === 'blend' && (
-                  <div className="control-group">
-                    <label htmlFor="transparencySlider">Opacity</label>
+                  <div className="flex items-center gap-1 text-xs">
+                    <label className="text-slate-400 text-[0.7rem] uppercase tracking-wide font-medium">Opacity</label>
                     <input
                       type="range"
-                      id="transparencySlider"
                       min="0"
                       max="100"
                       value={transparencyValue}
-                      onChange={(e) => handleTransparencyChange(parseInt(e.target.value))}
+                      onChange={(e) => setTransparencyValue(parseInt(e.target.value))}
                     />
-                    <span className="range-value">{transparencyValue}%</span>
+                    <span className="text-[0.7rem] text-sky-400 font-mono min-w-[28px] text-right">{transparencyValue}%</span>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="header-divider" />
+            <div className="w-px h-5 bg-slate-700 shrink-0 mx-1" />
 
-            <div className="zoom-control">
-              <label htmlFor="zoomSlider">Zoom</label>
-              <button className="zoom-step-btn" onClick={() => updateState({ zoomFactor: Math.max(0.1, zoomFactor - 0.1) })}>-</button>
+            <div className="flex items-center ml-auto text-xs gap-1">
+              <label className="text-slate-400 text-[0.7rem] uppercase tracking-wide font-medium">Zoom</label>
+              <button className="step-btn" onClick={() => updateState({ zoomFactor: Math.max(0.1, zoomFactor - 0.1) })}>-</button>
               <input
                 type="range"
-                id="zoomSlider"
                 min="10"
                 max="500"
                 step="5"
                 value={Math.round(zoomFactor * 100)}
                 onChange={handleZoom}
+                className="w-[120px]"
               />
-              <button className="zoom-step-btn" onClick={() => updateState({ zoomFactor: Math.min(5, zoomFactor + 0.1) })}>+</button>
-              <span className="range-value">{Math.round(zoomFactor * 100)}%</span>
+              <button className="step-btn" onClick={() => updateState({ zoomFactor: Math.min(5, zoomFactor + 0.1) })}>+</button>
+              <span className="text-[0.7rem] text-sky-400 font-mono min-w-[28px] text-right">{Math.round(zoomFactor * 100)}%</span>
             </div>
 
-            <div className="header-divider" />
+            <div className="w-px h-5 bg-slate-700 shrink-0 mx-1" />
 
-            <button className="tools-expand-btn" onClick={onToggleTools}>
+            <button
+              className="bg-transparent border border-slate-700 text-slate-500 px-2 py-0.5 rounded text-[0.7rem] cursor-pointer whitespace-nowrap transition-all duration-150 hover:bg-white/[0.08] hover:text-slate-50 hover:border-sky-400"
+              onClick={onToggleTools}
+            >
               {toolsVisible ? 'Tools ▸' : 'Tools ◂'}
             </button>
 
-            <button className="help-btn" onClick={() => setShowHelp(true)} title="Help">?</button>
+            <button
+              className="step-btn w-[22px] h-[22px] font-bold ml-1"
+              onClick={() => setShowHelp(true)}
+              title="Help"
+            >?</button>
           </div>
         </div>
       </header>
