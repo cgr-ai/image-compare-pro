@@ -191,7 +191,7 @@ main {
 }
 
 .bottom-row .image-panel.result-panel {
-  width: 50%;
+  width: calc(50% - var(--spacing-sm) / 2);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
