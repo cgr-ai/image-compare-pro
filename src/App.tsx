@@ -85,6 +85,15 @@ export default function App() {
     [store, doCompare]
   );
 
+  // --- Auto-run comparison when settings change ---
+  const compareDebounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => {
+    const { image1, image2 } = store.getState();
+    if (!image1 || !image2) return;
+    clearTimeout(compareDebounceRef.current);
+    compareDebounceRef.current = setTimeout(() => doCompare(), 50);
+  }, [comparisonMode, pixelSubMode, toleranceValue, transparencyValue, doCompare, store]);
+
   // --- Zoom effect ---
   const zoomFactor = useAppStore((s) => s.zoomFactor);
   useEffect(() => {
@@ -489,7 +498,6 @@ export default function App() {
         setToleranceValue={setToleranceValue}
         transparencyValue={transparencyValue}
         setTransparencyValue={setTransparencyValue}
-        onCompare={doCompare}
         toolsVisible={toolsVisible}
         onToggleTools={() => setToolsVisible(!toolsVisible)}
       />

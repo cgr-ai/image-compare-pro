@@ -371,7 +371,7 @@ canvas.edit-active {
 }
 
 .diff-info {
-  color: var(--color-text-muted);
+  color: var(--color-text-primary);
   white-space: nowrap;
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useAppStore } from '../store/useAppStore';
 
 interface HeaderProps {
@@ -10,7 +10,6 @@ interface HeaderProps {
   setToleranceValue: (val: number) => void;
   transparencyValue: number;
   setTransparencyValue: (val: number) => void;
-  onCompare: () => void;
   toolsVisible: boolean;
   onToggleTools: () => void;
 }
@@ -24,14 +23,11 @@ export default function Header({
   setToleranceValue,
   transparencyValue,
   setTransparencyValue,
-  onCompare,
   toolsVisible,
   onToggleTools,
 }: HeaderProps) {
   const zoomFactor = useAppStore((s) => s.zoomFactor);
   const updateState = useAppStore((s) => s.updateState);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
   const handleZoom = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const zoom = parseInt(e.target.value);
@@ -42,24 +38,18 @@ export default function Header({
 
   const handleModeChange = (mode: string) => {
     setComparisonMode(mode);
-    onCompare();
   };
 
   const handleSubModeChange = (mode: string) => {
     setPixelSubMode(mode);
-    onCompare();
   };
 
   const handleToleranceChange = (val: number) => {
     setToleranceValue(val);
-    clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(onCompare, 50);
   };
 
   const handleTransparencyChange = (val: number) => {
     setTransparencyValue(val);
-    clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(onCompare, 50);
   };
 
   return (
