@@ -24,20 +24,27 @@ export default function EditingTools({ onUndo, onRedo, onReset, onSave, onApply 
   const historyIndex = useAppStore((s) => s.historyIndex);
   const redoStack = useAppStore((s) => s.redoStack);
   const updateState = useAppStore((s) => s.updateState);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const hasActiveCanvas = activeCanvas !== null;
 
+  if (collapsed) {
+    return (
+      <button
+        className="tools-expand-btn"
+        onClick={() => setCollapsed(false)}
+        title="Show editing tools"
+      >
+        Tools ◂
+      </button>
+    );
+  }
+
   return (
-    <div className={`editing-tools${collapsed ? ' collapsed' : ''}`}>
-      <div className="editing-tools-header" onClick={() => setCollapsed(!collapsed)}>
+    <div className="editing-tools">
+      <div className="editing-tools-header" onClick={() => setCollapsed(true)}>
         <span className="editing-tools-title">Tools</span>
-        <button
-          className="collapse-toggle"
-          aria-label={collapsed ? 'Expand tools panel' : 'Collapse tools panel'}
-        >
-          {collapsed ? '◂' : '▸'}
-        </button>
+        <button className="collapse-toggle" aria-label="Collapse tools panel">▸</button>
       </div>
       <div className="editing-tools-body">
         <div className="tool-buttons">
@@ -78,22 +85,12 @@ export default function EditingTools({ onUndo, onRedo, onReset, onSave, onApply 
         </div>
         <div className="edit-actions">
           <div className="action-row">
-            <button id="undoBtn" onClick={onUndo} disabled={historyIndex <= 0} title="Undo">
-              ↶
-            </button>
-            <button id="redoBtn" onClick={onRedo} disabled={redoStack.length === 0} title="Redo">
-              ↷
-            </button>
+            <button id="undoBtn" onClick={onUndo} disabled={historyIndex <= 0} title="Undo">↶</button>
+            <button id="redoBtn" onClick={onRedo} disabled={redoStack.length === 0} title="Redo">↷</button>
           </div>
-          <button id="resetBtn" onClick={onReset} disabled={!hasActiveCanvas}>
-            Reset
-          </button>
-          <button id="saveBtn" onClick={onSave} disabled={!hasActiveCanvas}>
-            Save Image
-          </button>
-          <button id="applyBtn" onClick={onApply} disabled={!hasActiveCanvas}>
-            Apply Changes
-          </button>
+          <button id="resetBtn" onClick={onReset} disabled={!hasActiveCanvas}>Reset</button>
+          <button id="saveBtn" onClick={onSave} disabled={!hasActiveCanvas}>Save Image</button>
+          <button id="applyBtn" onClick={onApply} disabled={!hasActiveCanvas}>Apply Changes</button>
         </div>
       </div>
     </div>
