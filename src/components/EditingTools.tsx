@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
 
 interface EditingToolsProps {
@@ -7,6 +6,8 @@ interface EditingToolsProps {
   onReset: () => void;
   onSave: () => void;
   onApply: () => void;
+  visible: boolean;
+  onCollapse: () => void;
 }
 
 const tools = [
@@ -16,7 +17,7 @@ const tools = [
   { id: 'selectTool', label: 'Select', icon: '⬚' },
 ];
 
-export default function EditingTools({ onUndo, onRedo, onReset, onSave, onApply }: EditingToolsProps) {
+export default function EditingTools({ onUndo, onRedo, onReset, onSave, onApply, visible, onCollapse }: EditingToolsProps) {
   const selectedTool = useAppStore((s) => s.selectedTool);
   const brushSize = useAppStore((s) => s.brushSize);
   const color = useAppStore((s) => s.color);
@@ -24,25 +25,14 @@ export default function EditingTools({ onUndo, onRedo, onReset, onSave, onApply 
   const historyIndex = useAppStore((s) => s.historyIndex);
   const redoStack = useAppStore((s) => s.redoStack);
   const updateState = useAppStore((s) => s.updateState);
-  const [collapsed, setCollapsed] = useState(true);
 
   const hasActiveCanvas = activeCanvas !== null;
 
-  if (collapsed) {
-    return (
-      <button
-        className="tools-expand-btn"
-        onClick={() => setCollapsed(false)}
-        title="Show editing tools"
-      >
-        Tools ◂
-      </button>
-    );
-  }
+  if (!visible) return null;
 
   return (
     <div className="editing-tools">
-      <div className="editing-tools-header" onClick={() => setCollapsed(true)}>
+      <div className="editing-tools-header" onClick={onCollapse}>
         <span className="editing-tools-title">Tools</span>
         <button className="collapse-toggle" aria-label="Collapse tools panel">▸</button>
       </div>

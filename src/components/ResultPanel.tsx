@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import InspectionGrid, { InspectionGridHandle } from './InspectionGrid';
 
 interface ResultPanelProps {
@@ -16,18 +15,17 @@ export default function ResultPanel({
 }: ResultPanelProps) {
   return (
     <div className="bottom-row">
+      <InspectionGrid ref={inspectionRef} />
       <div className="image-panel result-panel">
         <div className="panel-header">
           <h3>Comparison</h3>
           <button onClick={onSaveResult}>Save Result</button>
         </div>
-        <div className="result-container">
-          <InspectionGrid ref={inspectionRef} />
-          <div className="result-view" ref={resultViewRef}>
-            <canvas ref={resultCanvasRef} />
-          </div>
+        <div className="result-view" ref={resultViewRef}>
+          <canvas ref={resultCanvasRef} />
         </div>
       </div>
+      <div className="bottom-spacer" />
     </div>
   );
 }

@@ -11,6 +11,8 @@ interface HeaderProps {
   transparencyValue: number;
   setTransparencyValue: (val: number) => void;
   onCompare: () => void;
+  toolsVisible: boolean;
+  onToggleTools: () => void;
 }
 
 export default function Header({
@@ -23,6 +25,8 @@ export default function Header({
   transparencyValue,
   setTransparencyValue,
   onCompare,
+  toolsVisible,
+  onToggleTools,
 }: HeaderProps) {
   const zoomFactor = useAppStore((s) => s.zoomFactor);
   const updateState = useAppStore((s) => s.updateState);
@@ -140,6 +144,12 @@ export default function Header({
             />
             <span className="range-value">{Math.round(zoomFactor * 100)}%</span>
           </div>
+
+          <div className="header-divider" />
+
+          <button className="tools-expand-btn" onClick={onToggleTools}>
+            {toolsVisible ? 'Tools ▸' : 'Tools ◂'}
+          </button>
         </div>
       </div>
     </header>

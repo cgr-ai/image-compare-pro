@@ -32,6 +32,7 @@ export default function App() {
   const [pixelSubMode, setPixelSubMode] = useState('tolerance');
   const [toleranceValue, setToleranceValue] = useState(10);
   const [transparencyValue, setTransparencyValue] = useState(50);
+  const [toolsVisible, setToolsVisible] = useState(false);
 
   // Drawing refs (not state - imperative canvas ops)
   const isDrawingRef = useRef(false);
@@ -489,6 +490,8 @@ export default function App() {
         transparencyValue={transparencyValue}
         setTransparencyValue={setTransparencyValue}
         onCompare={doCompare}
+        toolsVisible={toolsVisible}
+        onToggleTools={() => setToolsVisible(!toolsVisible)}
       />
 
       <main>
@@ -523,6 +526,8 @@ export default function App() {
             onReset={handleReset}
             onSave={handleSave}
             onApply={handleApply}
+            visible={toolsVisible}
+            onCollapse={() => setToolsVisible(false)}
           />
         </div>
       </main>
