@@ -51,7 +51,8 @@ export function pixelByPixelComparison(
         if (maxDiff === 0) {
           resultData.data[i] = 0; resultData.data[i + 1] = 0; resultData.data[i + 2] = 0;
         } else {
-          const yellowIntensity = Math.min(255, (maxDiff / 255) * 255);
+          // Use sqrt scale so small diffs are visible (min brightness 80)
+          const yellowIntensity = Math.min(255, 80 + Math.sqrt(maxDiff / 255) * 175);
           resultData.data[i] = yellowIntensity; resultData.data[i + 1] = yellowIntensity; resultData.data[i + 2] = 0;
         }
         resultData.data[i + 3] = 255;
