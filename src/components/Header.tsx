@@ -38,8 +38,8 @@ function HelpModal({ onClose }: { onClose: () => void }) {
             <h4 className="text-[0.8rem] text-slate-200 mt-2 mb-0.5">Heatmap</h4>
             <p className="text-slate-400 mb-1 leading-relaxed">Visualizes difference magnitude as a heat map.</p>
             <ul className="list-none pl-2 my-1 space-y-1">
-              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Black</strong> — Identical pixels</li>
-              <li className="text-slate-400 flex items-center gap-1.5"><strong className="text-slate-200">Yellow</strong> (brighter = larger diff) — Pixels that differ</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0" style={{background:'rgb(0,0,0)'}} /> <strong className="text-slate-200">Black</strong> — Identical pixels</li>
+              <li className="text-slate-400 flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm border border-white/20 shrink-0" style={{background:'rgb(255,255,0)'}} /> <strong className="text-slate-200">Yellow</strong> (brighter = larger diff) — Pixels that differ</li>
             </ul>
 
             <h4 className="text-[0.8rem] text-slate-200 mt-2 mb-0.5">Overlay</h4>
@@ -70,7 +70,7 @@ function HelpModal({ onClose }: { onClose: () => void }) {
               <li className="text-slate-400 flex items-center gap-1.5">Normalizes by pixel count</li>
               <li className="text-slate-400 flex items-center gap-1.5">Computes distance: <code className="font-mono bg-slate-900 px-1 rounded text-[0.7rem] text-sky-400">1 - &Sigma;&radic;(h1[i] x h2[i])</code></li>
             </ul>
-            <p className="text-slate-400 mb-1 leading-relaxed">Output: Image 1 with a uniform blue tint proportional to the histogram distance. More blue = more different overall color distribution.</p>
+            <p className="text-slate-400 mb-1 leading-relaxed">Output: Image 1 with a subtle blue tint. The tint increases R/G reduction and B boost proportional to the histogram distance. Effect is subtle for similar images — shows the original image nearly unchanged when distributions match closely.</p>
           </section>
 
           <section>
