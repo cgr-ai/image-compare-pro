@@ -1,4 +1,4 @@
-import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useRef, useImperativeHandle, forwardRef } from 'react';
 import { Pixel } from '../store/useAppStore';
 import { getContext } from '../utils/canvas';
 
@@ -10,6 +10,10 @@ export interface InspectionGridHandle {
     img2Ctx: CanvasRenderingContext2D
   ) => void;
 }
+
+const GRID_SIZE = 13;
+const CELL_SIZE = 14;
+const CANVAS_SIZE = GRID_SIZE * CELL_SIZE;
 
 const InspectionGrid = forwardRef<InspectionGridHandle>((_props, ref) => {
   const inspectionCanvas1Ref = useRef<HTMLCanvasElement>(null);
@@ -57,19 +61,17 @@ const InspectionGrid = forwardRef<InspectionGridHandle>((_props, ref) => {
 
   return (
     <div className="inspection-container">
-      <div className="inspection-grids">
-        <div className="inspection-grid">
-          <canvas ref={inspectionCanvas1Ref} width={156} height={156} />
-          <div className="pixel-data">RGBA: <span ref={pixel1RGBRef}>0,0,0,0</span></div>
-        </div>
-        <div className="inspection-grid">
-          <canvas ref={inspectionCanvas2Ref} width={156} height={156} />
-          <div className="pixel-data">RGBA: <span ref={pixel2RGBRef}>0,0,0,0</span></div>
-        </div>
+      <div className="inspection-grid">
+        <div className="grid-label">Img 1 <span className="pixel-data" ref={pixel1RGBRef}>0,0,0,0</span></div>
+        <canvas ref={inspectionCanvas1Ref} width={CANVAS_SIZE} height={CANVAS_SIZE} />
+      </div>
+      <div className="inspection-grid">
+        <div className="grid-label">Img 2 <span className="pixel-data" ref={pixel2RGBRef}>0,0,0,0</span></div>
+        <canvas ref={inspectionCanvas2Ref} width={CANVAS_SIZE} height={CANVAS_SIZE} />
       </div>
       <div className="info-container">
-        <div className="position-info">Pos: <span ref={cursorPosRef}>0, 0</span></div>
-        <div className="diff-info">Diff: <span ref={pixelDiffRGBRef}>0,0,0,0</span></div>
+        <span className="position-info" ref={cursorPosRef}>0, 0</span>
+        <span className="diff-info">Diff: <span ref={pixelDiffRGBRef}>0,0,0,0</span></span>
       </div>
     </div>
   );
@@ -81,22 +83,15 @@ function drawInspectionGrid(
   sourceCtx: CanvasRenderingContext2D,
   inspectionCtx: CanvasRenderingContext2D
 ): void {
-  const gridSize = 11;
-  const cellSize = 12;
-  const origin = {
-    x: inspectionCtx.canvas.width / 2 - (gridSize * cellSize) / 2,
-    y: inspectionCtx.canvas.height / 2 - (gridSize * cellSize) / 2,
-  };
-
-  const offsetX = Math.max(0, x - Math.floor(gridSize / 2));
-  const offsetY = Math.max(0, y - Math.floor(gridSize / 2));
+  const offsetX = Math.max(0, x - Math.floor(GRID_SIZE / 2));
+  const offsetY = Math.max(0, y - Math.floor(GRID_SIZE / 2));
 
   try {
-    const width = Math.min(gridSize, sourceCtx.canvas.width - offsetX);
-    const height = Math.min(gridSize, sourceCtx.canvas.height - offsetY);
+    const width = Math.min(GRID_SIZE, sourceCtx.canvas.width - offsetX);
+    const height = Math.min(GRID_SIZE, sourceCtx.canvas.height - offsetY);
     if (width > 0 && height > 0) {
       const imageData = sourceCtx.getImageData(offsetX, offsetY, width, height);
-      drawZoomedGrid(inspectionCtx, imageData, origin.x, origin.y, cellSize);
+      drawZoomedGrid(inspectionCtx, imageData, 0, 0, CELL_SIZE);
     }
   } catch (e) {
     console.error('Error getting image data:', e);
@@ -123,7 +118,7 @@ function drawZoomedGrid(
       const a = imageData.data[idx + 3];
       ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a / 255})`;
       ctx.fillRect(originX + x * cellSize, originY + y * cellSize, cellSize, cellSize);
-      ctx.strokeStyle = 'rgba(200, 200, 200, 0.5)';
+      ctx.strokeStyle = 'rgba(100, 100, 100, 0.3)';
       ctx.strokeRect(originX + x * cellSize, originY + y * cellSize, cellSize, cellSize);
     }
   }

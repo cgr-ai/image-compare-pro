@@ -302,6 +302,8 @@ canvas.edit-active {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  gap: 3px;
+  width: 196px;
 }
 
 .result-view {
@@ -320,58 +322,57 @@ canvas.edit-active {
   position: relative;
 }
 
-.inspection-grids {
-  display: flex;
-  gap: 4px;
-}
-
 .inspection-grid {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .inspection-grid canvas {
   display: block;
   border: 1px solid var(--color-border);
   background-color: var(--color-bg-main);
-  width: 156px;
-  height: 156px;
+  width: 100%;
+  height: auto;
   image-rendering: pixelated;
+}
+
+.grid-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-xs);
+  font-family: 'Consolas', 'SF Mono', monospace;
+  color: var(--color-accent);
+  font-weight: 600;
+  padding: 1px 2px;
 }
 
 .pixel-data {
   font-size: var(--font-size-xs);
   font-family: 'Consolas', 'SF Mono', monospace;
-  padding: 2px 4px;
-  background-color: var(--color-bg-pixel-data);
-  border-radius: var(--border-radius-sm);
-  margin-bottom: 2px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+  font-weight: 400;
 }
 
 .info-container {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  justify-content: space-between;
   background-color: var(--color-bg-pixel-data);
   border-radius: var(--border-radius-sm);
-  padding: 3px;
-  margin-top: 3px;
+  padding: 3px 4px;
+  font-size: var(--font-size-xs);
+  font-family: 'Consolas', 'SF Mono', monospace;
 }
 
 .position-info {
-  font-size: var(--font-size-xs);
-  font-family: 'Consolas', 'SF Mono', monospace;
+  color: var(--color-text-primary);
   white-space: nowrap;
-  display: flex;
-  color: var(--color-text-secondary);
 }
 
 .diff-info {
-  font-size: var(--font-size-xs);
-  font-family: 'Consolas', 'SF Mono', monospace;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
+  white-space: nowrap;
 }
 
 /* -----------------------------
