@@ -112,6 +112,8 @@ function drawZoomedGrid(
 ): void {
   const w = imageData.width;
   const h = imageData.height;
+  const centerX = Math.floor(w / 2);
+  const centerY = Math.floor(h / 2);
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const idx = (y * w + x) * 4;
@@ -125,6 +127,13 @@ function drawZoomedGrid(
       ctx.strokeRect(originX + x * cellSize, originY + y * cellSize, cellSize, cellSize);
     }
   }
+  // Highlight center pixel (cursor position)
+  const cx = originX + centerX * cellSize;
+  const cy = originY + centerY * cellSize;
+  ctx.strokeStyle = '#ff0000';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(cx + 1, cy + 1, cellSize - 2, cellSize - 2);
+  ctx.lineWidth = 1;
 }
 
 function getPixelAt(ctx: CanvasRenderingContext2D, x: number, y: number): Pixel {
