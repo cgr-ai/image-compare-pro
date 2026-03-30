@@ -41,11 +41,9 @@ export function pixelByPixelComparison(
         if (maxDiff === 0) {
           resultData.data[i] = 128; resultData.data[i + 1] = 128; resultData.data[i + 2] = 128;
         } else if (maxDiff <= tolerance) {
-          const blueIntensity = Math.min(255, 100 + (maxDiff / tolerance) * 155);
-          resultData.data[i] = 0; resultData.data[i + 1] = 0; resultData.data[i + 2] = blueIntensity;
+          resultData.data[i] = 0; resultData.data[i + 1] = 0; resultData.data[i + 2] = 200;
         } else {
-          const redIntensity = Math.min(255, 100 + ((maxDiff - tolerance) / (255 - tolerance)) * 155);
-          resultData.data[i] = redIntensity; resultData.data[i + 1] = 0; resultData.data[i + 2] = 0;
+          resultData.data[i] = 220; resultData.data[i + 1] = 0; resultData.data[i + 2] = 0;
         }
         resultData.data[i + 3] = 255;
         break;
